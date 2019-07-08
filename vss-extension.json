@@ -1,8 +1,8 @@
 {
     "manifestVersion": 1.0,
-    "id": "vsts-rest-picklist-control",
-    "version": "0.0.306",
-    "name": "Custom PickList Control - copy",
+    "id": "aspentech-priclist-control",
+    "version": "0.0.10",
+    "name": "AspenTech PickList Control",
     "description": "A work item form control which allows selection of a value from rest apis.",
     "publisher": "akshayh",
     "icons": {
@@ -65,12 +65,12 @@
                 "ms.vss-work-web.work-item-form"
             ],
             "properties": {
-                "name": "Country",
+                "name": "Cascading Control",
                 "uri": "dist/index.html",
                 "height": 50,
 				"inputs": [
 				    {
-                        "id":"FieldName",
+                        "id":"Product",
                         "name": "Select the field for this control. This is the only input needed if the field is a picklist field with suggested values.",
                         "type": "WorkItemField",
                         "properties": {
@@ -82,7 +82,7 @@
                         }
                     },
                     {
-                        "id":"Url",
+                        "id":"ProductUrl",
                         "name": "Url for the suggested values",
                         "validation": {
                             "dataType": "String",
@@ -90,7 +90,7 @@
                         }
                     },
                     {
-                        "id":"Property",
+                        "id":"ProductProperty",
                         "name": "Object property",
                         "description": "If the url returns an array of objects, select which object property to use as the string. Leave blank if the server returns an array of strings.",
                         "validation": {
@@ -99,7 +99,7 @@
                         }
                     },
                     {
-                        "id":"StateName",
+                        "id":"AreaName",
                         "name": "Select the field for this control. This is the only input needed if the field is a picklist field with suggested values.",
                         "type": "WorkItemField",
                         "properties": {
@@ -111,7 +111,7 @@
                         }
                     },
                     {
-                        "id":"StateUrl",
+                        "id":"AreaUrl",
                         "name": "Url for the suggested values",
                         "validation": {
                             "dataType": "String",
@@ -119,7 +119,7 @@
                         }
                     },
                     {
-                        "id":"StateProperty",
+                        "id":"AreaProperty",
                         "name": "Object property",
                         "description": "If the url returns an array of objects, select which object property to use as the string. Leave blank if the server returns an array of strings.",
                         "validation": {
@@ -128,7 +128,7 @@
                         }
                     },
                     {
-                        "id":"CityName",
+                        "id":"SubareaName",
                         "name": "Select the field for this control. This is the only input needed if the field is a picklist field with suggested values.",
                         "type": "WorkItemField",
                         "properties": {
@@ -140,7 +140,7 @@
                         }
                     },
                     {
-                        "id":"CityUrl",
+                        "id":"SubareaUrl",
                         "name": "Url for the suggested values",
                         "validation": {
                             "dataType": "String",
@@ -148,7 +148,7 @@
                         }
                     },
                     {
-                        "id":"CityProperty",
+                        "id":"SubareaProperty",
                         "name": "Object property",
                         "description": "If the url returns an array of objects, select which object property to use as the string. Leave blank if the server returns an array of strings.",
                         "validation": {

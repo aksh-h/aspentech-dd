@@ -20,35 +20,35 @@ export class MultiValueCombo extends BaseMultiValueControl {
     private _valueToCheckboxMap: IDictionaryStringTo<JQuery>;
     private _valueToLabelMap: IDictionaryStringTo<JQuery>;
 
-    private _StateselectedValuesWrapper: JQuery;
-    private _StateselectedValuesContainer: JQuery;
-    private _StatecheckboxValuesContainer: JQuery;
+    private _AreaselectedValuesWrapper: JQuery;
+    private _AreaselectedValuesContainer: JQuery;
+    private _AreacheckboxValuesContainer: JQuery;
 
-    private _Statechevron: JQuery;
+    private _Areachevron: JQuery;
 
-    private _StatesuggestedValues: string[];
+    private _AreasuggestedValues: string[];
 
-    private _StatevalueToCheckboxMap: IDictionaryStringTo<JQuery>;
-    private _StatevalueToLabelMap: IDictionaryStringTo<JQuery>;
+    private _AreavalueToCheckboxMap: IDictionaryStringTo<JQuery>;
+    private _AreavalueToLabelMap: IDictionaryStringTo<JQuery>;
 
-    private _CityselectedValuesWrapper: JQuery;
-    private _CityselectedValuesContainer: JQuery;
-    private _CitycheckboxValuesContainer: JQuery;
+    private _SubareaselectedValuesWrapper: JQuery;
+    private _SubareaselectedValuesContainer: JQuery;
+    private _SubareacheckboxValuesContainer: JQuery;
 
-    private _Citychevron: JQuery;
+    private _Subareachevron: JQuery;
 
-    private _CitysuggestedValues: string[];
+    private _SubareasuggestedValues: string[];
 
-    private _CityvalueToCheckboxMap: IDictionaryStringTo<JQuery>;
-    private _CityvalueToLabelMap: IDictionaryStringTo<JQuery>;
+    private _SubareavalueToCheckboxMap: IDictionaryStringTo<JQuery>;
+    private _SubareavalueToLabelMap: IDictionaryStringTo<JQuery>;
 
     private _maxSelectedToShow = 100;
     private _chevronDownClass = "bowtie-chevron-down-light";
     private _chevronUpClass = "bowtie-chevron-up-light";
 
     private _toggleThrottleDelegate: Function;
-    private _StatetoggleThrottleDelegate: Function;
-    private _CitytoggleThrottleDelegate: Function;
+    private _AreatoggleThrottleDelegate: Function;
+    private _SubareatoggleThrottleDelegate: Function;
     /**
      * Initialize a new instance of MultiValueControl
      */
@@ -61,21 +61,21 @@ export class MultiValueCombo extends BaseMultiValueControl {
         this._valueToCheckboxMap = {};
         this._valueToLabelMap = {};
 
-        this._StateselectedValuesWrapper = $("<div>").addClass("StateselectedValuesWrapper").appendTo(this.StatecontainerElement);
-        this._StateselectedValuesContainer = $("<div>").addClass("StateselectedValuesContainer").attr("tabindex", "-1").appendTo(this._StateselectedValuesWrapper);
-        this._Statechevron = $("<span />").addClass("bowtie-icon " + this._chevronDownClass).appendTo(this._StateselectedValuesWrapper);
-        this._StatecheckboxValuesContainer = $("<div>").addClass("StatecheckboxValuesContainer").appendTo(this.StatecontainerElement);
+        this._AreaselectedValuesWrapper = $("<div>").addClass("StateselectedValuesWrapper").appendTo(this.AreacontainerElement);
+        this._AreaselectedValuesContainer = $("<div>").addClass("StateselectedValuesContainer").attr("tabindex", "-1").appendTo(this._AreaselectedValuesWrapper);
+        this._Areachevron = $("<span />").addClass("bowtie-icon " + this._chevronDownClass).appendTo(this._AreaselectedValuesWrapper);
+        this._AreacheckboxValuesContainer = $("<div>").addClass("StatecheckboxValuesContainer").appendTo(this.AreacontainerElement);
 
-        this._StatevalueToCheckboxMap = {};
-        this._StatevalueToLabelMap = {};
+        this._AreavalueToCheckboxMap = {};
+        this._AreavalueToLabelMap = {};
 
-        this._CityselectedValuesWrapper = $("<div>").addClass("CityselectedValuesWrapper").appendTo(this.CitycontainerElement);
-        this._CityselectedValuesContainer = $("<div>").addClass("CityselectedValuesContainer").attr("tabindex", "-1").appendTo(this._CityselectedValuesWrapper);
-        this._Citychevron = $("<span />").addClass("bowtie-icon " + this._chevronDownClass).appendTo(this._CityselectedValuesWrapper);
-        this._CitycheckboxValuesContainer = $("<div>").addClass("CitycheckboxValuesContainer").appendTo(this.CitycontainerElement);
+        this._SubareaselectedValuesWrapper = $("<div>").addClass("CityselectedValuesWrapper").appendTo(this.SubareacontainerElement);
+        this._SubareaselectedValuesContainer = $("<div>").addClass("CityselectedValuesContainer").attr("tabindex", "-1").appendTo(this._SubareaselectedValuesWrapper);
+        this._Subareachevron = $("<span />").addClass("bowtie-icon " + this._chevronDownClass).appendTo(this._SubareaselectedValuesWrapper);
+        this._SubareacheckboxValuesContainer = $("<div>").addClass("CitycheckboxValuesContainer").appendTo(this.SubareacontainerElement);
 
-        this._CityvalueToCheckboxMap = {};
-        this._CityvalueToLabelMap = {};
+        this._SubareavalueToCheckboxMap = {};
+        this._SubareavalueToLabelMap = {};
 
         this._getSuggestedValues().then(
             (values: string[]) => {
@@ -84,19 +84,19 @@ export class MultiValueCombo extends BaseMultiValueControl {
                 super.initialize();
             }
         );
-        this._getStateSuggestedValues().then(
+        this._getAreaSuggestedValues().then(
             (values: string[]) => {
-                this._StatesuggestedValues = values;
-                this._populateStateCheckBoxes();
-                super.Stateinitialize();
+                this._AreasuggestedValues = values;
+                this._populateAreaCheckBoxes();
+                super.Areainitialize();
             }
         );
 
-        this._getCitySuggestedValues().then(
+        this._getSubareaSuggestedValues().then(
             (values: string[]) => {
-                this._CitysuggestedValues = values;
-                this._populateCityCheckBoxes();
-                super.Cityinitialize();
+                this._SubareasuggestedValues = values;
+                this._populateSubareaCheckBoxes();
+                super.Subareainitialize();
             }
         );
 
@@ -114,35 +114,35 @@ export class MultiValueCombo extends BaseMultiValueControl {
             return false;
         });
 
-        // ---STATE--//
+        // ---Area--//
 
-        this._StatetoggleThrottleDelegate = VSSUtilsCore.throttledDelegate(this, 100, () => {
-            this._toggleStateCheckBoxContainer();
+        this._AreatoggleThrottleDelegate = VSSUtilsCore.throttledDelegate(this, 100, () => {
+            this._toggleAreaCheckBoxContainer();
         });
 
-        this._StateselectedValuesWrapper.click(() => {
-            this._StatetoggleThrottleDelegate.call(this);
+        this._AreaselectedValuesWrapper.click(() => {
+            this._AreatoggleThrottleDelegate.call(this);
             return false;
         });
 
-        this._Statechevron.click(() => {
-            this._StatetoggleThrottleDelegate.call(this);
+        this._Areachevron.click(() => {
+            this._AreatoggleThrottleDelegate.call(this);
             return false;
         });
 
-        // --CITY-- //
+        // --Subarea-- //
 
-        this._CitytoggleThrottleDelegate = VSSUtilsCore.throttledDelegate(this, 100, () => {
-            this._toggleCityCheckBoxContainer();
+        this._SubareatoggleThrottleDelegate = VSSUtilsCore.throttledDelegate(this, 100, () => {
+            this._toggleSubareaCheckBoxContainer();
         });
 
-        this._CityselectedValuesWrapper.click(() => {
-            this._CitytoggleThrottleDelegate.call(this);
+        this._SubareaselectedValuesWrapper.click(() => {
+            this._SubareatoggleThrottleDelegate.call(this);
             return false;
         });
 
-        this._Citychevron.click(() => {
-            this._CitytoggleThrottleDelegate.call(this);
+        this._Subareachevron.click(() => {
+            this._SubareatoggleThrottleDelegate.call(this);
             return false;
         });
     }
@@ -219,17 +219,17 @@ export class MultiValueCombo extends BaseMultiValueControl {
         this.resize();
     }
 
-    private _showStateValues(values: string[]) {
+    private _showAreaValues(values: string[]) {
         if (values.length <= 0) {
-            this._StateselectedValuesContainer.append("<div class='noStateSelection'>No selection made</div>");
+            this._AreaselectedValuesContainer.append("<div class='noAreaSelection'>No selection made</div>");
         } else {
             $.each(values, (i, value) => {
                 var control;
                 // only show first N selections and the rest as more.
                 if (i < this._maxSelectedToShow) {
-                    control = this._createSelectedStateValueControl(value);
+                    control = this._createSelectedAreaValueControl(value);
                 } else {
-                    control = this._createSelectedStateValueControl(values.length - i + " more");
+                    control = this._createSelectedAreaValueControl(values.length - i + " more");
                     control.attr("title", values.slice(i).join(";"));
                     return false;
                 }
@@ -288,7 +288,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
     private _getSuggestedValues(): IPromise<string[]> {
         var defer = Q.defer<any>();
         var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
-        var url: string = inputs["Url"];
+        var url: string = inputs["ProductUrl"];
         callDevApi(url, "GET", undefined, undefined, (data) => {
             defer.resolve(this._findArr(data));
         }, (error) => {
@@ -307,7 +307,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
     // Convert unknown data type to string[]
     private _findArr(data: object): string[] {
         const inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
-        var property: string = inputs.Property;
+        var property: string = inputs["ProductProperty"];
         // Look for an array: object itself or one of its properties
         const objs: object[] = [data];
         for (let obj = objs.shift(); obj; obj = objs.shift()) {
@@ -335,9 +335,9 @@ export class MultiValueCombo extends BaseMultiValueControl {
                 action.call(this);
             }
             this.productName = value;
-            this._getStateRespectiveValues(value).then(
+            this._getAreaRespectiveValues(value).then(
                 (values: string[]) => {
-                    this._StatesuggestedValues = values;
+                    this._AreasuggestedValues = values;
                     this._populateOptions();
                 }
             );
@@ -348,38 +348,38 @@ export class MultiValueCombo extends BaseMultiValueControl {
     }
     //#endregion
 
-    //#region State
+    //#region Area
 
-    public GetStateSuggestedValue(): void {
-        this._getStateSuggestedValues().then(
+    public GetAreaSuggestedValue(): void {
+        this._getAreaSuggestedValues().then(
             (values: string[]) => {
-                this._StatesuggestedValues = values;
-                this._populateStateCheckBoxes();
-                super.Stateinitialize();
+                this._AreasuggestedValues = values;
+                this._populateAreaCheckBoxes();
+                super.Areainitialize();
             }
         );
     }
 
-    public Stateclear(): void {
-        var checkboxes: JQuery = $("input", this._StatecheckboxValuesContainer);
-        var labels: JQuery = $(".checkboxLabel", this._StatecheckboxValuesContainer);
+    public Areaclear(): void {
+        var checkboxes: JQuery = $("input", this._AreacheckboxValuesContainer);
+        var labels: JQuery = $(".checkboxLabel", this._AreacheckboxValuesContainer);
         checkboxes.prop("checked", false);
         checkboxes.removeClass("selectedCheckbox");
-        this._StatecheckboxValuesContainer.empty();
+        this._AreacheckboxValuesContainer.empty();
     }
-    protected getStateValue(): string {
-        return this._StateselectedValuesContainer.text();
+    protected getAreaValue(): string {
+        return this._AreaselectedValuesContainer.text();
     }
-    protected setStateValue(value: string): void {
-        this.Stateclear();
+    protected setAreaValue(value: string): void {
+        this.Areaclear();
         var selectedValues = value ? value.split(";") : [];
 
-        this._showStateValues(selectedValues);
+        this._showAreaValues(selectedValues);
         $.each(selectedValues, (i, value) => {
             if (value) {
                 // mark the checkbox as checked
-                var checkbox = this._StatevalueToCheckboxMap[value];
-                var label = this._StatevalueToLabelMap[value];
+                var checkbox = this._AreavalueToCheckboxMap[value];
+                var label = this._AreavalueToLabelMap[value];
                 if (checkbox) {
                     checkbox.prop("checked", true);
                     checkbox.addClass("selectedCheckbox");
@@ -388,42 +388,42 @@ export class MultiValueCombo extends BaseMultiValueControl {
         });
     }
 
-    private _toggleStateCheckBoxContainer() {
-        if (this._StatecheckboxValuesContainer.is(":visible")) {
-            this._hideStateCheckBoxContainer();
+    private _toggleAreaCheckBoxContainer() {
+        if (this._AreacheckboxValuesContainer.is(":visible")) {
+            this._hideAreaCheckBoxContainer();
         } else {
-            this._showStateCheckBoxContainer();
+            this._showAreaCheckBoxContainer();
         }
     }
 
-    private _showStateCheckBoxContainer() {
-        this._Statechevron.removeClass(this._chevronDownClass).addClass(this._chevronUpClass);
-        this.StatecontainerElement.addClass("expanded").removeClass("collapsed");
-        this._StatecheckboxValuesContainer.show();
+    private _showAreaCheckBoxContainer() {
+        this._Areachevron.removeClass(this._chevronDownClass).addClass(this._chevronUpClass);
+        this.AreacontainerElement.addClass("expanded").removeClass("collapsed");
+        this._AreacheckboxValuesContainer.show();
         this.resize();
     }
 
-    private _hideStateCheckBoxContainer() {
-        this._Statechevron.removeClass(this._chevronUpClass).addClass(this._chevronDownClass);
-        this.StatecontainerElement.removeClass("expanded").addClass("collapsed");
-        this._StatecheckboxValuesContainer.hide();
+    private _hideAreaCheckBoxContainer() {
+        this._Areachevron.removeClass(this._chevronUpClass).addClass(this._chevronDownClass);
+        this.AreacontainerElement.removeClass("expanded").addClass("collapsed");
+        this._AreacheckboxValuesContainer.hide();
         this.resize();
     }
-    private _refreshStateValue(currentSelectedValue) {
-        this._hideStateCheckBoxContainer();
-        this._StateselectedValuesContainer.empty();
+    private _refreshAreaValue(currentSelectedValue) {
+        this._hideAreaCheckBoxContainer();
+        this._AreaselectedValuesContainer.empty();
         var val = [currentSelectedValue];
-        this._showStateValues(val);
+        this._showAreaValues(val);
     }
 
-    private _createSelectedStateValueControl(value: string): JQuery {
+    private _createSelectedAreaValueControl(value: string): JQuery {
         var control = $("<div />");
         if (value) {
             control.text(value);
             control.attr("title", value);
             // control.addClass("selected");
-            this._StateselectedValuesContainer.empty();
-            this._StateselectedValuesContainer.append(control);
+            this._AreaselectedValuesContainer.empty();
+            this._AreaselectedValuesContainer.append(control);
         }
 
         return control;
@@ -431,45 +431,45 @@ export class MultiValueCombo extends BaseMultiValueControl {
     /**
     * Populates the UI with the list of checkboxes to choose the value from.
     */
-    private _populateStateCheckBoxes(): void {
-        if (!this._StatesuggestedValues || this._StatesuggestedValues.length === 0) {
-            this.showStateError("No values to select.");
+    private _populateAreaCheckBoxes(): void {
+        if (!this._AreasuggestedValues || this._AreasuggestedValues.length === 0) {
+            this.showAreaError("No values to select.");
         } else {
-            this._StatecheckboxValuesContainer.empty();
-            $.each(this._StatesuggestedValues, (i, value) => {
-                this._createStateCheckBoxControl(value);
+            this._AreacheckboxValuesContainer.empty();
+            $.each(this._AreasuggestedValues, (i, value) => {
+                this._createAreaCheckBoxControl(value);
             });
         }
     }
 
-    private _createStateCheckBoxControl(value: string) {
+    private _createAreaCheckBoxControl(value: string) {
         var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
         var propValue = value;
-        let label = this._createStateValueLabel(propValue);
-        let checkbox = this._createStateCheckBox(propValue, label);
+        let label = this._createAreaValueLabel(propValue);
+        let checkbox = this._createAreaCheckBox(propValue, label);
         let container = $("<div />").addClass("scheckboxContainer");
         checkbox.addClass("valueOption");
-        this._StatevalueToCheckboxMap[value] = checkbox;
-        this._StatevalueToLabelMap[value] = label;
+        this._AreavalueToCheckboxMap[value] = checkbox;
+        this._AreavalueToLabelMap[value] = label;
         container.append(checkbox);
         container.append(label);
-        this._StatecheckboxValuesContainer.append(container);
+        this._AreacheckboxValuesContainer.append(container);
     }
 
     // loads values at first time
-    private _getStateSuggestedValues(): IPromise<string[]> {
+    private _getAreaSuggestedValues(): IPromise<string[]> {
         var defer = Q.defer<any>();
         var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
-        var url: string = inputs["StateUrl"];
+        var url: string = inputs["AreaUrl"];
         callDevApi(url, "GET", undefined, undefined, (data) => {
-            defer.resolve(this._findStateArr(data));
+            defer.resolve(this._findAreaArr(data));
         }, (error) => {
             defer.reject(error);
         });
         return defer.promise;
     }
 
-    private _createStateValueLabel(value: string) {
+    private _createAreaValueLabel(value: string) {
         let label = $("<label />");
         label.attr("for", "checkbox1" + value);
         label.text(value);
@@ -477,7 +477,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
         label.addClass("checkboxLabel");
         return label;
     }
-    private _createStateCheckBox(value: string, label: JQuery, action?: Function) {
+    private _createAreaCheckBox(value: string, label: JQuery, action?: Function) {
         let checkbox = $("<input  />");
         checkbox.attr("type", "checkbox");
         checkbox.attr("name", value);
@@ -489,34 +489,34 @@ export class MultiValueCombo extends BaseMultiValueControl {
             if (action) {
                 action.call(this);
             }
-            this.Cityclear();
+            this.Subareaclear();
             console.log("Product " + this.productName);
             console.log("area " + value);
-            this._getCityRespectiveValues(value, this.productName).then(
+            this._getSubareaRespectiveValues(value, this.productName).then(
                 (values: string[]) => {
-                    this._CitysuggestedValues = values;
-                    if(this._CitysuggestedValues.length > 0) {
-                        this._populateCityOptions();
+                    this._SubareasuggestedValues = values;
+                    if(this._SubareasuggestedValues.length > 0) {
+                        this._populateSubareaOptions();
                     }
                 }
             );
-            this._refreshStateValue($(f.currentTarget).attr("value"));
-            this.stateflush();
+            this._refreshAreaValue($(f.currentTarget).attr("value"));
+            this.Areaflush();
         });
         return checkbox;
     }
 
-    public _getStateRespectiveValues(value: string): IPromise<string[]> {
+    public _getAreaRespectiveValues(value: string): IPromise<string[]> {
         // Removeing field values on the product chang
         $('.StateselectedValuesContainer').empty();
-        this._StateselectedValuesContainer.append("<div class='noStateSelection'>No selection made</div>");
-        this.ClearState();
-        //this.stateflush();
+        this._AreaselectedValuesContainer.append("<div class='noAreaSelection'>No selection made</div>");
+        this.ClearArea();
+        //this.Areaflush();
 
         $('.CityselectedValuesContainer').empty();
-        this._CityselectedValuesContainer.append("<div class='noCitySelection'>No selection made</div>");
-        this.ClearCity();
-        // this.Cityflush();
+        this._SubareaselectedValuesContainer.append("<div class='noSubareaSelection'>No selection made</div>");
+        this.ClearSubarea();
+        // this.Subareaflush();
 
         var defer = Q.defer<any>();
         var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
@@ -525,7 +525,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
         urlSplit[urlSplit.length - 1] = value;
         url = urlSplit.join("/");
         callDevApi(url, "GET", undefined, undefined, (data) => {
-            defer.resolve(this._findStateArr(data));
+            defer.resolve(this._findAreaArr(data));
         }, (error) => {
             defer.reject(error);
         });
@@ -533,27 +533,27 @@ export class MultiValueCombo extends BaseMultiValueControl {
     }
 
     private _populateOptions(): void {
-        if (this._StatesuggestedValues.length >= 0) {
-            this._StatecheckboxValuesContainer.empty();
-            $.each(this._StatesuggestedValues, (i, value) => {
+        if (this._AreasuggestedValues.length >= 0) {
+            this._AreacheckboxValuesContainer.empty();
+            $.each(this._AreasuggestedValues, (i, value) => {
                 this._createOptionControl(value);
             });
         }
     }
     private _createOptionControl(value: string) {
-        let label = this._createStateValueLabel(value);
-        let checkbox = this._createStateCheckBox(value, label);
+        let label = this._createAreaValueLabel(value);
+        let checkbox = this._createAreaCheckBox(value, label);
         let container = $("<div />").addClass("scheckboxContainer");
         checkbox.addClass("valueOption");
         container.append(checkbox);
         container.append(label);
-        this._StatecheckboxValuesContainer.append(container);
-        this.StatecontainerElement.append(this._StatecheckboxValuesContainer);
+        this._AreacheckboxValuesContainer.append(container);
+        this.AreacontainerElement.append(this._AreacheckboxValuesContainer);
     }
 
-    private _findStateArr(data: object): string[] {
+    private _findAreaArr(data: object): string[] {
         const inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
-        var property: string = inputs["StateProperty"];
+        var property: string = inputs["AreaProperty"];
         // Look for an array: object itself or one of its properties
         const objs: object[] = [data];
         for (let obj = objs.shift(); obj; obj = objs.shift()) {
@@ -568,21 +568,21 @@ export class MultiValueCombo extends BaseMultiValueControl {
             }
         }
     }
-    //#endregion state
+    //#endregion Area
 
-    //#region City
+    //#region Subarea
 
-    private _showCityValues(values: string[]) {
+    private _showSubareaValues(values: string[]) {
         if (values.length <= 0) {
-            this._CityselectedValuesContainer.append("<div class='noCitySelection'>No selection made</div>");
+            this._SubareaselectedValuesContainer.append("<div class='noSubareaSelection'>No selection made</div>");
         } else {
             $.each(values, (i, value) => {
                 var control;
                 // only show first N selections and the rest as more.
                 if (i < this._maxSelectedToShow) {
-                    control = this._createSelectedCityValueControl(value);
+                    control = this._createSelectedSubareaValueControl(value);
                 } else {
-                    control = this._createSelectedCityValueControl(values.length - i + " more");
+                    control = this._createSelectedSubareaValueControl(values.length - i + " more");
                     control.attr("title", values.slice(i).join(";"));
                     return false;
                 }
@@ -591,35 +591,35 @@ export class MultiValueCombo extends BaseMultiValueControl {
         this.resize();
     }
 
-    public GetCitySuggestedValue(): void {
-        this._getCitySuggestedValues().then(
+    public GetSubareaSuggestedValue(): void {
+        this._getSubareaSuggestedValues().then(
             (values: string[]) => {
-                this._CitysuggestedValues = values;
-                this._populateCityCheckBoxes();
-                super.Cityinitialize();
+                this._SubareasuggestedValues = values;
+                this._populateSubareaCheckBoxes();
+                super.Subareainitialize();
             }
         );
     }
 
-    public Cityclear(): void {
-        var checkboxes: JQuery = $("input", this._CitycheckboxValuesContainer);
-        var labels: JQuery = $(".checkboxLabel", this._CitycheckboxValuesContainer);
+    public Subareaclear(): void {
+        var checkboxes: JQuery = $("input", this._SubareacheckboxValuesContainer);
+        var labels: JQuery = $(".checkboxLabel", this._SubareacheckboxValuesContainer);
         checkboxes.prop("checked", false);
         checkboxes.removeClass("selectedCheckbox");
-        this._CitycheckboxValuesContainer.empty();
+        this._SubareacheckboxValuesContainer.empty();
     }
-    protected getCityValue(): string {
-        return this._CityselectedValuesContainer.text();
+    protected getSubareaValue(): string {
+        return this._SubareaselectedValuesContainer.text();
     }
-    protected setCityValue(value: string): void {
-        this.Cityclear();
+    protected setSubareaValue(value: string): void {
+        this.Subareaclear();
         var selectedValues = value ? value.split(";") : [];
-        this._showCityValues(selectedValues);
+        this._showSubareaValues(selectedValues);
         $.each(selectedValues, (i, value) => {
             if (value) {
                 // mark the checkbox as checked
-                var checkbox = this._CityvalueToCheckboxMap[value];
-                var label = this._CityvalueToLabelMap[value];
+                var checkbox = this._SubareavalueToCheckboxMap[value];
+                var label = this._SubareavalueToLabelMap[value];
                 if (checkbox) {
                     checkbox.prop("checked", true);
                     checkbox.addClass("selectedCheckbox");
@@ -628,87 +628,87 @@ export class MultiValueCombo extends BaseMultiValueControl {
         });
     }
 
-    private _toggleCityCheckBoxContainer() {
-        if (this._CitycheckboxValuesContainer.is(":visible")) {
-            this._hideCityCheckBoxContainer();
+    private _toggleSubareaCheckBoxContainer() {
+        if (this._SubareacheckboxValuesContainer.is(":visible")) {
+            this._hideSubareaCheckBoxContainer();
         } else {
-            this._showCityCheckBoxContainer();
+            this._showSubareaCheckBoxContainer();
         }
     }
 
-    private _showCityCheckBoxContainer() {
-        this._Citychevron.removeClass(this._chevronDownClass).addClass(this._chevronUpClass);
-        this.CitycontainerElement.addClass("expanded").removeClass("collapsed");
-        this._CitycheckboxValuesContainer.show();
+    private _showSubareaCheckBoxContainer() {
+        this._Subareachevron.removeClass(this._chevronDownClass).addClass(this._chevronUpClass);
+        this.SubareacontainerElement.addClass("expanded").removeClass("collapsed");
+        this._SubareacheckboxValuesContainer.show();
         this.resize();
     }
 
-    private _hideCityCheckBoxContainer() {
-        this._Citychevron.removeClass(this._chevronUpClass).addClass(this._chevronDownClass);
-        this.CitycontainerElement.removeClass("expanded").addClass("collapsed");
-        this._CitycheckboxValuesContainer.hide();
+    private _hideSubareaCheckBoxContainer() {
+        this._Subareachevron.removeClass(this._chevronUpClass).addClass(this._chevronDownClass);
+        this.SubareacontainerElement.removeClass("expanded").addClass("collapsed");
+        this._SubareacheckboxValuesContainer.hide();
         this.resize();
     }
-    private _refreshCityValue(currentCitySelectedValue) {
-        this._hideCityCheckBoxContainer();
-        this._CityselectedValuesContainer.empty();
-        var val = [currentCitySelectedValue];
-        this._showCityValues(val);
+    private _refreshSubareaValue(currentSubareaSelectedValue) {
+        this._hideSubareaCheckBoxContainer();
+        this._SubareaselectedValuesContainer.empty();
+        var val = [currentSubareaSelectedValue];
+        this._showSubareaValues(val);
     }
 
 
-    private _createSelectedCityValueControl(value: string): JQuery {
+    private _createSelectedSubareaValueControl(value: string): JQuery {
         var control = $("<div />");
         if (value) {
             control.text(value);
             control.attr("title", value);
             // control.addClass("selected");
-            this._CityselectedValuesContainer.empty();
-            this._CityselectedValuesContainer.append(control);
+            this._SubareaselectedValuesContainer.empty();
+            this._SubareaselectedValuesContainer.append(control);
         }
         return control;
     }
     /**
     * Populates the UI with the list of checkboxes to choose the value from.
     */
-    private _populateCityCheckBoxes(): void {
-        if (this._CitysuggestedValues.length >= 0) {
-            this._CitycheckboxValuesContainer.empty();
-            $.each(this._CitysuggestedValues, (i, value) => {
-                this._createCityCheckBoxControl(value);
+    private _populateSubareaCheckBoxes(): void {
+        if (this._SubareasuggestedValues.length >= 0) {
+            this._SubareacheckboxValuesContainer.empty();
+            $.each(this._SubareasuggestedValues, (i, value) => {
+                this._createSubareaCheckBoxControl(value);
             });
         }
     }
 
-    private _createCityCheckBoxControl(value: string) {
+    private _createSubareaCheckBoxControl(value: string) {
         var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
         var propValue = value;
-        let label = this._createCityValueLabel(propValue);
-        let checkbox = this._createCityCheckBox(propValue, label);
+        let label = this._createSubareaValueLabel(propValue);
+        let checkbox = this._createSubareaCheckBox(propValue, label);
         let container = $("<div />").addClass("ccheckboxContainer");
         checkbox.addClass("valueOption");
-        this._CityvalueToCheckboxMap[value] = checkbox;
-        this._CityvalueToLabelMap[value] = label;
+        this._SubareavalueToCheckboxMap[value] = checkbox;
+        this._SubareavalueToLabelMap[value] = label;
         container.append(checkbox);
         container.append(label);
-        this._CitycheckboxValuesContainer.append(container);
+        this._SubareacheckboxValuesContainer.append(container);
     }
 
     // loads values at first time
-    private _getCitySuggestedValues(): IPromise<string[]> {
+    private _getSubareaSuggestedValues(): IPromise<string[]> {
         var defer = Q.defer<any>();
         var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
-        var url: string = inputs["CityUrl"];
+        var url: string = inputs["SubareaUrl"];
         callDevApi(url, "GET", undefined, undefined, (data) => {
-            defer.resolve(this._findCityArr(data));
+            defer.resolve(this._findSubareaArr(data));
         }, (error) => {
             defer.reject(error);
         });
         return defer.promise;
     }
-    // ---End City---//
+    // ---End Subarea---//
 
-    private _createCityValueLabel(value: string) {
+    private _createSubareaValueLabel(value: string) {
         let label = $("<label />");
         label.attr("for", "checkbox2" + value);
         label.text(value);
@@ -717,7 +717,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
         return label;
     }
 
-    private _createCityCheckBox(value: string, label: JQuery, action?: Function) {
+    private _createSubareaCheckBox(value: string, label: JQuery, action?: Function) {
         let checkbox = $("<input  />");
         checkbox.attr("type", "checkbox");
         checkbox.attr("name", value);
@@ -729,51 +729,51 @@ export class MultiValueCombo extends BaseMultiValueControl {
             if (action) {
                 action.call(this);
             }
-            this._refreshCityValue($(g.currentTarget).attr("value"));
-            this.Cityflush();
+            this._refreshSubareaValue($(g.currentTarget).attr("value"));
+            this.Subareaflush();
         });
         return checkbox;
     }
 
-    public _getCityRespectiveValues(value: string, productName: string): IPromise<string[]> {
+    public _getSubareaRespectiveValues(value: string, productName: string): IPromise<string[]> {
         $('.CityselectedValuesContainer').empty();
-        this._CityselectedValuesContainer.append("<div class='noCitySelection'>No selection made</div>");
-        this.ClearCity();
-        this._CitycheckboxValuesContainer.empty();
+        this._SubareaselectedValuesContainer.append("<div class='noSubareaSelection'>No selection made</div>");
+        this.ClearSubarea();
+        this._SubareacheckboxValuesContainer.empty();
 
         var defer = Q.defer<any>();
         var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
         var url: string = "https://cascadingdd.azurewebsites.net/api/SubArea/" + productName + "/" + value;
         callDevApi(url, "GET", undefined, undefined, (data) => {
-            defer.resolve(this._findCityArr(data));
+            defer.resolve(this._findSubareaArr(data));
         }, (error) => {
             defer.reject(error);
         });
         return defer.promise;
     }
-    private _populateCityOptions(): void {
-        if (this._CitysuggestedValues.length > 0) {
-            this._CitycheckboxValuesContainer.empty();
-            $.each(this._CitysuggestedValues, (i, value) => {
-                this._CreateCityOptionControl(value);
+    private _populateSubareaOptions(): void {
+        if (this._SubareasuggestedValues.length > 0) {
+            this._SubareacheckboxValuesContainer.empty();
+            $.each(this._SubareasuggestedValues, (i, value) => {
+                this._CreateSubareaOptionControl(value);
             });
         }
     }
-    private _CreateCityOptionControl(value: string) {
-        let label = this._createCityValueLabel(value);
-        let checkbox = this._createCityCheckBox(value, label);
+    private _CreateSubareaOptionControl(value: string) {
+        let label = this._createSubareaValueLabel(value);
+        let checkbox = this._createSubareaCheckBox(value, label);
         let container = $("<div />").addClass("ccheckboxContainer");
         checkbox.addClass("valueOption");
         container.append(checkbox);
         container.append(label);
-        this._CitycheckboxValuesContainer.append(container);
-        this.CitycontainerElement.append(this._CitycheckboxValuesContainer);
+        this._SubareacheckboxValuesContainer.append(container);
+        this.SubareacontainerElement.append(this._SubareacheckboxValuesContainer);
     }
 
     // Convert unknown data type to string[]
-    private _findCityArr(data: object): string[] {
+    private _findSubareaArr(data: object): string[] {
         const inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
-        var property: string = inputs["CityProperty"];
+        var property: string = inputs["SubareaProperty"];
         // Look for an array: object itself or one of its properties
         const objs: object[] = [data];
         for (let obj = objs.shift(); obj; obj = objs.shift()) {

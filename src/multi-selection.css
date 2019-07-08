@@ -1,3 +1,6 @@
+.div-label-control{
+    padding: 2px;
+}
 .container {
     border: 1px transparent solid;
     margin-right: 4px;
@@ -30,8 +33,8 @@ input, label, .container {
 }
 
 .container .selectedValuesContainer .noSelection {
-    margin: 6px 6px 2px 4px;
-    font-size: 14px;
+    margin: 0px 6px 0px 4px;
+    font-size: 12px;
     display:inline-block;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -61,7 +64,8 @@ input[type=checkbox]:checked + label {
 
 .container .selectedValuesWrapper {
     padding-right: 20px;
-    padding-bottom:2px;
+    padding-bottom:3px;
+    padding-top:3px;
     position: relative;
 }
 
@@ -176,9 +180,9 @@ input, label, .statecontainer {
     background-color: #fafafa;
 }
 
-.statecontainer .StateselectedValuesContainer .noStateSelection {
-    margin: 6px 6px 2px 4px;
-    font-size: 14px;
+.statecontainer .StateselectedValuesContainer .noAreaSelection {
+    margin: 0px 6px 0px 4px;
+    font-size: 12px;
     display:inline-block;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -207,8 +211,9 @@ input[type=checkbox]:checked + label {
 }
 
 .statecontainer .StateselectedValuesWrapper {
-    padding-right: 20px;
-    padding-bottom:2px;
+    padding-right:20px;
+    padding-bottom:3px;
+    padding-top:3px;
     position: relative;
 }
 
@@ -323,9 +328,9 @@ input, label, .citycontainer {
     background-color: #fafafa;
 }
 
-.citycontainer .CityselectedValuesContainer .noCitySelection {
-    margin: 6px 6px 2px 4px;
-    font-size: 14px;
+.citycontainer .CityselectedValuesContainer .noSubareaSelection {
+    margin: 0px 6px 0px 4px;
+    font-size: 12px;
     display:inline-block;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -355,7 +360,8 @@ input[type=checkbox]:checked + label {
 
 .citycontainer .CityselectedValuesWrapper {
     padding-right: 20px;
-    padding-bottom:2px;
+    padding-bottom:3px;
+    padding-top:3px;
     position: relative;
 }
 

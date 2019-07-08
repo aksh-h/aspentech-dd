@@ -14,8 +14,8 @@ $(window).bind("keydown", function (event: JQueryEventObject) {
 });
 
 var control: BaseMultiValueControl;
-var stateControl: BaseMultiValueControl;
-var CityControl: BaseMultiValueControl;
+var AreaControl: BaseMultiValueControl;
+var SubareaControl: BaseMultiValueControl;
 var provider = () => {
     var ensureControl = () => {
         if (!control) {
@@ -28,44 +28,44 @@ var provider = () => {
     };
 
     var ensureSateControl  = () => {
-        if(!stateControl){
+        if(!AreaControl){
             var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
             var controlType: string = inputs["InputMode"];
-            stateControl = new MultiValueCombo();
-            stateControl.Stateinitialize();
+            AreaControl = new MultiValueCombo();
+            AreaControl.Areainitialize();
         }
-        stateControl.Stateinvalidate();
+        AreaControl.Areainvalidate();
     };
-    var ensureCityControl  = () => {
-        if(!stateControl){
+    var ensureSubareaControl  = () => {
+        if(!AreaControl){
             var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
             var controlType: string = inputs["InputMode"];
-            CityControl = new MultiValueCombo();
-            CityControl.Cityinitialize();
+            SubareaControl = new MultiValueCombo();
+            SubareaControl.Subareainitialize();
         }
-        CityControl.Cityinvalidate();
+        SubareaControl.Subareainvalidate();
     };
 
     return {
         onLoaded: (args: WitExtensionContracts.IWorkItemLoadedArgs) => {
             ensureControl();
             ensureSateControl();
-            ensureCityControl();
+            ensureSubareaControl();
         },
         onUnloaded: (args: WitExtensionContracts.IWorkItemChangedArgs) => {
             if (control) {
                 control.clear();
-                stateControl.clear();
-                CityControl.clear();
+                AreaControl.clear();
+                SubareaControl.clear();
             }
         },
         onFieldChanged: (args: WitExtensionContracts.IWorkItemFieldChangedArgs) => {
             if (control && args.changedFields[control.fieldName] !== undefined && args.changedFields[control.fieldName] !== null) {
                 control.invalidate();
-                stateControl.Stateinvalidate();
-            } else if (stateControl && args.changedFields[stateControl.statefieldName] !== undefined && args.changedFields[stateControl.statefieldName] !== null) {
-                stateControl.Stateinvalidate();
-                CityControl.clear();
+                AreaControl.Areainvalidate();
+            } else if (AreaControl && args.changedFields[AreaControl.AreafieldName] !== undefined && args.changedFields[AreaControl.AreafieldName] !== null) {
+                AreaControl.Areainvalidate();
+                SubareaControl.clear();
             }
         }
     };

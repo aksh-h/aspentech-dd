@@ -7,20 +7,20 @@ export class BaseMultiValueControl {
      * Field name input for the control
      */
     public fieldName: string;
-    public statefieldName: string;
-    public CityfieldName: string;
+    public AreafieldName: string;
+    public SubareafieldName: string;
     /**
      * The container to hold the control
      */
     protected containerElement: JQuery;
-    protected StatecontainerElement: JQuery;
-    protected CitycontainerElement: JQuery;
+    protected AreacontainerElement: JQuery;
+    protected SubareacontainerElement: JQuery;
     /**
      * The container for error message display
      */
     private _errorPane: JQuery;
-    private _StateerrorPane: JQuery;
-    private _CityerrorPane: JQuery;
+    private _AreaerrorPane: JQuery;
+    private _SubareaerrorPane: JQuery;
 
     private _flushing: boolean;
     private _bodyElement: HTMLBodyElement;
@@ -44,30 +44,30 @@ export class BaseMultiValueControl {
         if (this._showFieldBorder) {
             this.containerElement.addClass("fieldBorder");
         }
-        this.StatecontainerElement = $(".statecontainer");
+        this.AreacontainerElement = $(".statecontainer");
         if (this._showFieldBorder) {
-            this.StatecontainerElement.addClass("fieldBorder");
+            this.AreacontainerElement.addClass("fieldBorder");
         }
-        this.CitycontainerElement = $(".citycontainer");
+        this.SubareacontainerElement = $(".citycontainer");
         if (this._showFieldBorder) {
-            this.CitycontainerElement.addClass("fieldBorder");
+            this.SubareacontainerElement.addClass("fieldBorder");
         }
         this._errorPane = $("<div>").addClass("errorPane").appendTo(this.containerElement);
-        this._StateerrorPane = $("<div>").addClass("errorPane").appendTo(this.StatecontainerElement);
-        this._CityerrorPane = $("<div>").addClass("errorPane").appendTo(this.CitycontainerElement);
+        this._AreaerrorPane = $("<div>").addClass("errorPane").appendTo(this.AreacontainerElement);
+        this._SubareaerrorPane = $("<div>").addClass("errorPane").appendTo(this.SubareacontainerElement);
         var inputs: IDictionaryStringTo<string> = initialConfig.witInputs;
 
-        this.fieldName = inputs["FieldName"];
+        this.fieldName = inputs["Product"];
         if (!this.fieldName) {
-            this.showError("FieldName input has not been specified");
+            this.showError("Product input has not been specified");
         }
-        this.statefieldName = inputs["StateName"];
-        if (!this.statefieldName) {
-            this.showStateError("statefieldName input has not been specified");
+        this.AreafieldName = inputs["AreaName"];
+        if (!this.AreafieldName) {
+            this.showAreaError("AreaName input has not been specified");
         }
-        this.CityfieldName = inputs["CityName"];
-        if (!this.CityfieldName) {
-            this.showStateError("CityfieldName input has not been specified");
+        this.SubareafieldName = inputs["SubareaName"];
+        if (!this.SubareafieldName) {
+            this.showAreaError("SubareaName input has not been specified");
         }
         this._windowResizeThrottleDelegate = VSSUtilsCore.throttledDelegate(this, 50, () => {
             this._windowWidth = window.innerWidth;
@@ -89,12 +89,12 @@ export class BaseMultiValueControl {
         this.invalidate();
     }
 
-    public Stateinitialize(): void {
-        this.Stateinvalidate();
+    public Areainitialize(): void {
+        this.Areainvalidate();
     }
 
-    public Cityinitialize(): void {
-        this.Cityinvalidate();
+    public Subareainitialize(): void {
+        this.Subareainvalidate();
     }
     /**
      * Invalidate the control's value
@@ -131,33 +131,33 @@ export class BaseMultiValueControl {
             }
         );
     }
-    protected stateflush(): void {
+    protected Areaflush(): void {
         this._flushing = true;
         WitService.WorkItemFormService.getService().then(
             (service: WitService.IWorkItemFormService) => {
-                service.setFieldValue(this.statefieldName, this.getStateValue()).then(
+                service.setFieldValue(this.AreafieldName, this.getAreaValue()).then(
                     (values) => {
                         this._flushing = false;
                     },
                     () => {
                         this._flushing = false;
-                        this.showStateError("Error storing the field value");
+                        this.showAreaError("Error storing the field value");
                     }
                 )
             }
         );
     }
-    protected Cityflush(): void {
+    protected Subareaflush(): void {
         this._flushing = true;
         WitService.WorkItemFormService.getService().then(
             (service: WitService.IWorkItemFormService) => {
-                service.setFieldValue(this.CityfieldName, this.getCityValue()).then(
+                service.setFieldValue(this.SubareafieldName, this.getSubareaValue()).then(
                     (values) => {
                         this._flushing = false;
                     },
                     () => {
                         this._flushing = false;
-                        this.showCityError("Error storing the field value");
+                        this.showSubareaError("Error storing the field value");
                     }
                 )
             }
@@ -167,27 +167,27 @@ export class BaseMultiValueControl {
         return "";
     }
 
-    protected ClearCity(): void {
+    protected ClearSubarea(): void {
         WitService.WorkItemFormService.getService().then(
             (service: WitService.IWorkItemFormService) => {
-                service.setFieldValue(this.CityfieldName, "").then(
+                service.setFieldValue(this.SubareafieldName, "").then(
                     (values) => {
                     },
                     () => {
-                        this.showStateError("Error clearing the field value");
+                        this.showAreaError("Error clearing the field value");
                     }
                 )
             }
         );
     }
-    protected ClearState(): void {
+    protected ClearArea(): void {
         WitService.WorkItemFormService.getService().then(
             (service: WitService.IWorkItemFormService) => {
-                service.setFieldValue(this.statefieldName,"").then(
+                service.setFieldValue(this.AreafieldName,"").then(
                     (values) => {
                     },
                     () => {
-                        this.showCityError("Error clearing the field value");
+                        this.showSubareaError("Error clearing the field value");
                     }
                 )
             }
@@ -224,46 +224,46 @@ export class BaseMultiValueControl {
         );
         return defer.promise.then();
     }
-    //#region  State
-    public Stateinvalidate(): void {
+    //#region  Area
+    public Areainvalidate(): void {
         if (!this._flushing) {
-            this._getCurrentStateFieldValue().then(
+            this._getCurrentAreaFieldValue().then(
                 (value: string) => {
-                    this.setStateValue(value);
+                    this.setAreaValue(value);
                 }
             );
         }
         this.resize();
     }
-    protected getStateValue(): string {
+    protected getAreaValue(): string {
         return "";
     }
 
-    protected setStateValue(value: string): void {
+    protected setAreaValue(value: string): void {
     }
 
-    protected showStateError(error: string): void {
-        this._StateerrorPane.text(error);
-        this._StateerrorPane.show();
+    protected showAreaError(error: string): void {
+        this._AreaerrorPane.text(error);
+        this._AreaerrorPane.show();
     }
 
-    protected clearStateError() {
-        this._StateerrorPane.text("");
-        this._StateerrorPane.hide();
+    protected clearAreaError() {
+        this._AreaerrorPane.text("");
+        this._AreaerrorPane.hide();
     }
 
-    private _getCurrentStateFieldValue(): IPromise<string> {
+    private _getCurrentAreaFieldValue(): IPromise<string> {
         var defer = Q.defer();
         WitService.WorkItemFormService.getService().then(
             (service) => {
-                service.getFieldValues([this.statefieldName]).then(
+                service.getFieldValues([this.AreafieldName]).then(
                     (values) => {
-                        console.log(this.statefieldName);
-                        defer.resolve(values[this.statefieldName]);
-                        console.log(values[this.statefieldName]);
+                        console.log(this.AreafieldName);
+                        defer.resolve(values[this.AreafieldName]);
+                        console.log(values[this.AreafieldName]);
                     },
                     () => {
-                        this.showStateError("Error loading values for field: " + this.statefieldName);
+                        this.showAreaError("Error loading values for field: " + this.AreafieldName);
                     }
                 );
             }
@@ -271,48 +271,48 @@ export class BaseMultiValueControl {
         return defer.promise.then();
     }
 
-    //#endregion State
+    //#endregion Area
 
-    //#region City
-    public Cityinvalidate(): void {
+    //#region Subarea
+    public Subareainvalidate(): void {
         if (!this._flushing) {
-            this._getCurrentCityFieldValue().then(
+            this._getCurrentSubareaFieldValue().then(
                 (value: string) => {
-                    this.setCityValue(value);
+                    this.setSubareaValue(value);
                 }
             );
         }
         this.resize();
     }
-    protected getCityValue(): string {
+    protected getSubareaValue(): string {
         return "";
     }
 
-    protected setCityValue(value: string): void {
+    protected setSubareaValue(value: string): void {
     }
 
-    protected showCityError(error: string): void {
-        this._CityerrorPane.text(error);
-        this._CityerrorPane.show();
+    protected showSubareaError(error: string): void {
+        this._SubareaerrorPane.text(error);
+        this._SubareaerrorPane.show();
     }
 
-    protected clearCityError() {
-        this._CityerrorPane.text("");
-        this._CityerrorPane.hide();
+    protected clearSubareaError() {
+        this._SubareaerrorPane.text("");
+        this._SubareaerrorPane.hide();
     }
 
-    private _getCurrentCityFieldValue(): IPromise<string> {
+    private _getCurrentSubareaFieldValue(): IPromise<string> {
         var defer = Q.defer();
         WitService.WorkItemFormService.getService().then(
             (service) => {
-                service.getFieldValues([this.CityfieldName]).then(
+                service.getFieldValues([this.SubareafieldName]).then(
                     (values) => {
-                        console.log(this.CityfieldName);
-                        defer.resolve(values[this.CityfieldName]);
-                        console.log(values[this.CityfieldName]);
+                        console.log(this.SubareafieldName);
+                        defer.resolve(values[this.SubareafieldName]);
+                        console.log(values[this.SubareafieldName]);
                     },
                     () => {
-                        this.showCityError("Error loading values for field: " + this.CityfieldName);
+                        this.showSubareaError("Error loading values for field: " + this.SubareafieldName);
                     }
                 );
             }
@@ -321,7 +321,7 @@ export class BaseMultiValueControl {
     }
 
     //#endregion
-   
+
     protected resize() {
         this._bodyElement = <HTMLBodyElement>document.getElementsByTagName("body").item(0);
         // Cast as any until declarations are updated
