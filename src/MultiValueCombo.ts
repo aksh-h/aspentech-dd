@@ -432,9 +432,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
     * Populates the UI with the list of checkboxes to choose the value from.
     */
     private _populateAreaCheckBoxes(): void {
-        if (!this._AreasuggestedValues || this._AreasuggestedValues.length === 0) {
-            this.showAreaError("No values to select.");
-        } else {
+        if (this._AreasuggestedValues.length >= 0) {
             this._AreacheckboxValuesContainer.empty();
             $.each(this._AreasuggestedValues, (i, value) => {
                 this._createAreaCheckBoxControl(value);
@@ -495,7 +493,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
             this._getSubareaRespectiveValues(value, this.productName).then(
                 (values: string[]) => {
                     this._SubareasuggestedValues = values;
-                    if(this._SubareasuggestedValues.length > 0) {
+                    if (this._SubareasuggestedValues.length > 0) {
                         this._populateSubareaOptions();
                     }
                 }
