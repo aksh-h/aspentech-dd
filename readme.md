@@ -17,3 +17,5 @@ All build tasks are contained in [package.json](https://github.com/ostreifel/vst
 Inputs are specified in [vss-extension.json](https://github.com/ostreifel/vsts-rest-multivalue/blob/master/vss-extension.json)
 
 All extension logic, markup and styling is in [src](https://github.com/ostreifel/vsts-rest-multivalue/tree/master/src)
+
+# Latest
