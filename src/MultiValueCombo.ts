@@ -147,7 +147,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
         });
     }
 
-    //#region Country
+    //#region Product
 
     public clear(): void {
         var checkboxes: JQuery = $("input", this._checkboxValuesContainer);
@@ -350,16 +350,6 @@ export class MultiValueCombo extends BaseMultiValueControl {
 
     //#region Area
 
-    public GetAreaSuggestedValue(): void {
-        this._getAreaSuggestedValues().then(
-            (values: string[]) => {
-                this._AreasuggestedValues = values;
-                this._populateAreaCheckBoxes();
-                super.Areainitialize();
-            }
-        );
-    }
-
     public Areaclear(): void {
         var checkboxes: JQuery = $("input", this._AreacheckboxValuesContainer);
         var labels: JQuery = $(".checkboxLabel", this._AreacheckboxValuesContainer);
@@ -488,8 +478,6 @@ export class MultiValueCombo extends BaseMultiValueControl {
                 action.call(this);
             }
             this.Subareaclear();
-            console.log("Product " + this.productName);
-            console.log("area " + value);
             this._getSubareaRespectiveValues(value, this.productName).then(
                 (values: string[]) => {
                     this._SubareasuggestedValues = values;
@@ -509,7 +497,6 @@ export class MultiValueCombo extends BaseMultiValueControl {
         $('.StateselectedValuesContainer').empty();
         this._AreaselectedValuesContainer.append("<div class='noAreaSelection'>No selection made</div>");
         this.ClearArea();
-        //this.Areaflush();
 
         $('.CityselectedValuesContainer').empty();
         this._SubareaselectedValuesContainer.append("<div class='noSubareaSelection'>No selection made</div>");
@@ -518,10 +505,12 @@ export class MultiValueCombo extends BaseMultiValueControl {
 
         var defer = Q.defer<any>();
         var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
-        var url: string = "https://cascadingdd.azurewebsites.net/api/Area/Aspen Capital Cost Estimator";
-        var urlSplit = url.split("/");
-        urlSplit[urlSplit.length - 1] = value;
-        url = urlSplit.join("/");
+        console.log(inputs["AreaUrl"]);
+        var url: string = inputs["AreaUrl"]+"/"+value;
+        console.log(url);
+        // var urlSplit = url.split("/");
+        // urlSplit[urlSplit.length - 1] = value;
+        // url = urlSplit.join("/");
         callDevApi(url, "GET", undefined, undefined, (data) => {
             defer.resolve(this._findAreaArr(data));
         }, (error) => {
@@ -587,16 +576,6 @@ export class MultiValueCombo extends BaseMultiValueControl {
             });
         }
         this.resize();
-    }
-
-    public GetSubareaSuggestedValue(): void {
-        this._getSubareaSuggestedValues().then(
-            (values: string[]) => {
-                this._SubareasuggestedValues = values;
-                this._populateSubareaCheckBoxes();
-                super.Subareainitialize();
-            }
-        );
     }
 
     public Subareaclear(): void {
@@ -741,7 +720,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
 
         var defer = Q.defer<any>();
         var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
-        var url: string = "https://cascadingdd.azurewebsites.net/api/SubArea/" + productName + "/" + value;
+        var url: string = inputs["SubareaUrl"] + "/" + productName + "/" + value;
         callDevApi(url, "GET", undefined, undefined, (data) => {
             defer.resolve(this._findSubareaArr(data));
         }, (error) => {

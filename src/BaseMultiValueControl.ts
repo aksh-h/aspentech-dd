@@ -258,9 +258,7 @@ export class BaseMultiValueControl {
             (service) => {
                 service.getFieldValues([this.AreafieldName]).then(
                     (values) => {
-                        console.log(this.AreafieldName);
                         defer.resolve(values[this.AreafieldName]);
-                        console.log(values[this.AreafieldName]);
                     },
                     () => {
                         this.showAreaError("Error loading values for field: " + this.AreafieldName);
@@ -307,9 +305,7 @@ export class BaseMultiValueControl {
             (service) => {
                 service.getFieldValues([this.SubareafieldName]).then(
                     (values) => {
-                        console.log(this.SubareafieldName);
                         defer.resolve(values[this.SubareafieldName]);
-                        console.log(values[this.SubareafieldName]);
                     },
                     () => {
                         this.showSubareaError("Error loading values for field: " + this.SubareafieldName);
