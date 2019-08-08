@@ -36,6 +36,9 @@
   "description": "VSTS Work Item Form single value Control Extension",
   "private": false,
   "dependencies": {
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "knockout": "^3.5.0",
+    "react-dom": "^16.8.6",
+    "requirejs": "^2.3.6"
   }
 }

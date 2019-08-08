@@ -7,20 +7,20 @@ export class BaseMultiValueControl {
      * Field name input for the control
      */
     public fieldName: string;
+    public ProductfieldName: string;
     public AreafieldName: string;
-    public SubareafieldName: string;
     /**
      * The container to hold the control
      */
     protected containerElement: JQuery;
+    protected ProductcontainerElement: JQuery;
     protected AreacontainerElement: JQuery;
-    protected SubareacontainerElement: JQuery;
     /**
      * The container for error message display
      */
     private _errorPane: JQuery;
+    private _ProducterrorPane: JQuery;
     private _AreaerrorPane: JQuery;
-    private _SubareaerrorPane: JQuery;
 
     private _flushing: boolean;
     private _bodyElement: HTMLBodyElement;
@@ -40,34 +40,18 @@ export class BaseMultiValueControl {
         let initialConfig = VSS.getConfiguration();
         this._showFieldBorder = !!initialConfig.fieldBorder;
 
+        //#region Family
         this.containerElement = $(".container");
         if (this._showFieldBorder) {
             this.containerElement.addClass("fieldBorder");
         }
-        this.AreacontainerElement = $(".statecontainer");
-        if (this._showFieldBorder) {
-            this.AreacontainerElement.addClass("fieldBorder");
-        }
-        this.SubareacontainerElement = $(".citycontainer");
-        if (this._showFieldBorder) {
-            this.SubareacontainerElement.addClass("fieldBorder");
-        }
+       
         this._errorPane = $("<div>").addClass("errorPane").appendTo(this.containerElement);
-        this._AreaerrorPane = $("<div>").addClass("errorPane").appendTo(this.AreacontainerElement);
-        this._SubareaerrorPane = $("<div>").addClass("errorPane").appendTo(this.SubareacontainerElement);
         var inputs: IDictionaryStringTo<string> = initialConfig.witInputs;
 
-        this.fieldName = inputs["Product"];
+        this.fieldName = inputs["FamilyName"];
         if (!this.fieldName) {
             this.showError("Product input has not been specified");
-        }
-        this.AreafieldName = inputs["AreaName"];
-        if (!this.AreafieldName) {
-            this.showAreaError("AreaName input has not been specified");
-        }
-        this.SubareafieldName = inputs["SubareaName"];
-        if (!this.SubareafieldName) {
-            this.showAreaError("SubareaName input has not been specified");
         }
         this._windowResizeThrottleDelegate = VSSUtilsCore.throttledDelegate(this, 50, () => {
             this._windowWidth = window.innerWidth;
@@ -80,6 +64,38 @@ export class BaseMultiValueControl {
                 this._windowResizeThrottleDelegate.call(this);
             }
         });
+
+        //#endregion
+
+        //#region Product
+        this.ProductcontainerElement = $(".productcontainer");
+        if (this._showFieldBorder) {
+            this.ProductcontainerElement.addClass("fieldBorder");
+        }
+       
+        this._ProducterrorPane = $("<div>").addClass("errorPane").appendTo(this.ProductcontainerElement);
+        var inputs: IDictionaryStringTo<string> = initialConfig.witInputs;
+
+        this.ProductfieldName = inputs["ProductName"];
+        if (!this.ProductfieldName) {
+            this.showProductError("Product input has not been specified");
+        }
+        //#endregion
+
+        //#region Area
+        this.AreacontainerElement = $(".areacontainer");
+        if (this._showFieldBorder) {
+            this.AreacontainerElement.addClass("fieldBorder");
+        }
+       
+        this._AreaerrorPane = $("<div>").addClass("errorPane").appendTo(this.AreacontainerElement);
+        var inputs: IDictionaryStringTo<string> = initialConfig.witInputs;
+
+        this.AreafieldName = inputs["AreaName"];
+        if (!this.AreafieldName) {
+            this.showAreaError("Area input has not been specified");
+        }
+        //#endregion
     }
 
     /**
@@ -89,19 +105,12 @@ export class BaseMultiValueControl {
         this.invalidate();
     }
 
-    public Areainitialize(): void {
-        this.Areainvalidate();
-    }
-
-    public Subareainitialize(): void {
-        this.Subareainvalidate();
-    }
     /**
      * Invalidate the control's value
      */
     public invalidate(): void {
         if (!this._flushing) {
-            this._getCurrentFieldValue().then(
+            this._getCurrentFieldValue(this.fieldName).then(
                 (value: string) => {
                     this.setValue(value);
                 }
@@ -131,11 +140,109 @@ export class BaseMultiValueControl {
             }
         );
     }
-    protected Areaflush(): void {
+    protected getValue(): string {
+        return "";
+    }
+
+    protected setValue(value: string): void {
+    }
+    protected showError(error: string): void {
+        this._errorPane.text(error);
+        this._errorPane.show();
+    }
+
+    public clearError() {
+        this._errorPane.text("");
+        this._errorPane.hide();
+    }
+   
+    //#region Product
+
+    protected ProductgetValue(): string {
+        return "";
+    }
+    protected ProductsetValue(value: string): void {
+    }
+    public Productclear(): void {
+    }
+
+    public Productinitialize(): void {
+        this.Productinvalidate();
+    }
+    public Productinvalidate(): void {
+        if (!this._flushing) {
+            this._getCurrentFieldValue(this.ProductfieldName).then(
+                (value: string) => {
+                    this.ProductsetValue(value);
+                }
+            );
+        }
+        this.resize();
+    }
+    protected showProductError(error: string): void {
+        this._ProducterrorPane.text(error);
+        this._ProducterrorPane.show();
+    }
+    public clearProductError() {
+        this._ProducterrorPane.text("");
+        this._ProducterrorPane.hide();
+    }
+    protected Productflush(): void {
+        console.log("ProductFlush");
         this._flushing = true;
         WitService.WorkItemFormService.getService().then(
             (service: WitService.IWorkItemFormService) => {
-                service.setFieldValue(this.AreafieldName, this.getAreaValue()).then(
+                service.setFieldValue(this.ProductfieldName, this.ProductgetValue()).then(
+                    (values) => {
+                        this._flushing = false;
+                    },
+                    () => {
+                        this._flushing = false;
+                        this.showProductError("Error storing the field value");
+                    }
+                )
+            }
+        );
+    }
+    //#endregion
+
+    //#region Area
+
+    protected AreagetValue(): string {
+        return "";
+    }
+    protected AreasetValue(value: string): void {
+    }
+    public Areaclear(): void {
+    }
+
+    public Areainitialize(): void {
+        this.Areainvalidate();
+    }
+    public Areainvalidate(): void {
+        if (!this._flushing) {
+            this._getCurrentFieldValue(this.AreafieldName).then(
+                (value: string) => {
+                    this.AreasetValue(value);
+                }
+            );
+        }
+        this.resize();
+    }
+    protected showAreaError(error: string): void {
+        this._AreaerrorPane.text(error);
+        this._AreaerrorPane.show();
+    }
+    public clearAreaError() {
+        this._AreaerrorPane.text("");
+        this._AreaerrorPane.hide();
+    }
+    protected Areaflush(): void {
+        console.log("AreaFlush");
+        this._flushing = true;
+        WitService.WorkItemFormService.getService().then(
+            (service: WitService.IWorkItemFormService) => {
+                service.setFieldValue(this.AreafieldName, this.AreagetValue()).then(
                     (values) => {
                         this._flushing = false;
                     },
@@ -147,176 +254,25 @@ export class BaseMultiValueControl {
             }
         );
     }
-    protected Subareaflush(): void {
-        this._flushing = true;
-        WitService.WorkItemFormService.getService().then(
-            (service: WitService.IWorkItemFormService) => {
-                service.setFieldValue(this.SubareafieldName, this.getSubareaValue()).then(
-                    (values) => {
-                        this._flushing = false;
-                    },
-                    () => {
-                        this._flushing = false;
-                        this.showSubareaError("Error storing the field value");
-                    }
-                )
-            }
-        );
-    }
-    protected getValue(): string {
-        return "";
-    }
-
-    protected ClearSubarea(): void {
-        WitService.WorkItemFormService.getService().then(
-            (service: WitService.IWorkItemFormService) => {
-                service.setFieldValue(this.SubareafieldName, "").then(
-                    (values) => {
-                    },
-                    () => {
-                        this.showAreaError("Error clearing the field value");
-                    }
-                )
-            }
-        );
-    }
-    protected ClearArea(): void {
-        WitService.WorkItemFormService.getService().then(
-            (service: WitService.IWorkItemFormService) => {
-                service.setFieldValue(this.AreafieldName,"").then(
-                    (values) => {
-                    },
-                    () => {
-                        this.showSubareaError("Error clearing the field value");
-                    }
-                )
-            }
-        );
-    }
-
-
-    protected setValue(value: string): void {
-    }
-
-    protected showError(error: string): void {
-        this._errorPane.text(error);
-        this._errorPane.show();
-    }
-
-    protected clearError() {
-        this._errorPane.text("");
-        this._errorPane.hide();
-    }
-
-    private _getCurrentFieldValue(): IPromise<string> {
-        var defer = Q.defer();
-        WitService.WorkItemFormService.getService().then(
-            (service) => {
-                service.getFieldValues([this.fieldName]).then(
-                    (values) => {
-                        defer.resolve(values[this.fieldName]);
-                    },
-                    () => {
-                        this.showError("Error loading values for field: " + this.fieldName)
-                    }
-                );
-            }
-        );
-        return defer.promise.then();
-    }
-    //#region  Area
-    public Areainvalidate(): void {
-        if (!this._flushing) {
-            this._getCurrentAreaFieldValue().then(
-                (value: string) => {
-                    this.setAreaValue(value);
-                }
-            );
-        }
-        this.resize();
-    }
-    protected getAreaValue(): string {
-        return "";
-    }
-
-    protected setAreaValue(value: string): void {
-    }
-
-    protected showAreaError(error: string): void {
-        this._AreaerrorPane.text(error);
-        this._AreaerrorPane.show();
-    }
-
-    protected clearAreaError() {
-        this._AreaerrorPane.text("");
-        this._AreaerrorPane.hide();
-    }
-
-    private _getCurrentAreaFieldValue(): IPromise<string> {
-        var defer = Q.defer();
-        WitService.WorkItemFormService.getService().then(
-            (service) => {
-                service.getFieldValues([this.AreafieldName]).then(
-                    (values) => {
-                        defer.resolve(values[this.AreafieldName]);
-                    },
-                    () => {
-                        this.showAreaError("Error loading values for field: " + this.AreafieldName);
-                    }
-                );
-            }
-        );
-        return defer.promise.then();
-    }
-
-    //#endregion Area
-
-    //#region Subarea
-    public Subareainvalidate(): void {
-        if (!this._flushing) {
-            this._getCurrentSubareaFieldValue().then(
-                (value: string) => {
-                    this.setSubareaValue(value);
-                }
-            );
-        }
-        this.resize();
-    }
-    protected getSubareaValue(): string {
-        return "";
-    }
-
-    protected setSubareaValue(value: string): void {
-    }
-
-    protected showSubareaError(error: string): void {
-        this._SubareaerrorPane.text(error);
-        this._SubareaerrorPane.show();
-    }
-
-    protected clearSubareaError() {
-        this._SubareaerrorPane.text("");
-        this._SubareaerrorPane.hide();
-    }
-
-    private _getCurrentSubareaFieldValue(): IPromise<string> {
-        var defer = Q.defer();
-        WitService.WorkItemFormService.getService().then(
-            (service) => {
-                service.getFieldValues([this.SubareafieldName]).then(
-                    (values) => {
-                        defer.resolve(values[this.SubareafieldName]);
-                    },
-                    () => {
-                        this.showSubareaError("Error loading values for field: " + this.SubareafieldName);
-                    }
-                );
-            }
-        );
-        return defer.promise.then();
-    }
-
     //#endregion
+
+
+    private _getCurrentFieldValue(systemSieldName:string): IPromise<string> {
+        var defer = Q.defer();
+        WitService.WorkItemFormService.getService().then(
+            (service) => {
+                service.getFieldValues([systemSieldName]).then(
+                    (values) => {
+                        defer.resolve(values[systemSieldName]);
+                    },
+                    () => {
+                        this.showError("Error loading values for field: " + systemSieldName)
+                    }
+                );
+            }
+        );
+        return defer.promise.then();
+    }
 
     protected resize() {
         this._bodyElement = <HTMLBodyElement>document.getElementsByTagName("body").item(0);

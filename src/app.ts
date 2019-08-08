@@ -14,8 +14,7 @@ $(window).bind("keydown", function (event: JQueryEventObject) {
 });
 
 var control: BaseMultiValueControl;
-var AreaControl: BaseMultiValueControl;
-var SubareaControl: BaseMultiValueControl;
+var Productcontrol: BaseMultiValueControl;
 var provider = () => {
     var ensureControl = () => {
         if (!control) {
@@ -26,46 +25,34 @@ var provider = () => {
         }
         control.invalidate();
     };
-
-    var ensureSateControl  = () => {
-        if(!AreaControl){
+    var ensureProductcontrol = () =>{
+        if(!Productcontrol){
             var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
             var controlType: string = inputs["InputMode"];
-            AreaControl = new MultiValueCombo();
-            AreaControl.Areainitialize();
+            Productcontrol = new MultiValueCombo();
+            Productcontrol.Productinitialize();
         }
-        AreaControl.Areainvalidate();
-    };
-    var ensureSubareaControl  = () => {
-        if(!AreaControl){
-            var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
-            var controlType: string = inputs["InputMode"];
-            SubareaControl = new MultiValueCombo();
-            SubareaControl.Subareainitialize();
-        }
-        SubareaControl.Subareainvalidate();
-    };
+    }
 
     return {
         onLoaded: (args: WitExtensionContracts.IWorkItemLoadedArgs) => {
             ensureControl();
-            ensureSateControl();
-            ensureSubareaControl();
+            ensureProductcontrol();
         },
         onUnloaded: (args: WitExtensionContracts.IWorkItemChangedArgs) => {
             if (control) {
                 control.clear();
-                AreaControl.clear();
-                SubareaControl.clear();
+            }
+            if(Productcontrol){
+                Productcontrol.Productclear();
             }
         },
         onFieldChanged: (args: WitExtensionContracts.IWorkItemFieldChangedArgs) => {
             if (control && args.changedFields[control.fieldName] !== undefined && args.changedFields[control.fieldName] !== null) {
                 control.invalidate();
-                AreaControl.Areainvalidate();
-            } else if (AreaControl && args.changedFields[AreaControl.AreafieldName] !== undefined && args.changedFields[AreaControl.AreafieldName] !== null) {
-                AreaControl.Areainvalidate();
-                SubareaControl.clear();
+            }
+            else if(Productcontrol && args.changedFields[Productcontrol.ProductfieldName]!==undefined && args.changedFields[Productcontrol.ProductfieldName]!==null){
+                Productcontrol.Productinvalidate();
             }
         }
     };
