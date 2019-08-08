@@ -4,6 +4,7 @@ import * as VSSUtilsCore from "VSS/Utils/Core";
 import { BaseMultiValueControl } from "./BaseMultiValueControl";
 import { callDevApi } from "./RestCall";
 import * as WitService from "TFS/WorkItemTracking/Services";
+import { contentsOverflow } from 'VSS/Utils/UI';
 
 export class MultiValueCombo extends BaseMultiValueControl {
     /*
@@ -36,6 +37,16 @@ export class MultiValueCombo extends BaseMultiValueControl {
     private _ProducttoggleThrottleDelegate: Function;
     private _ProductvalueToCheckboxMap: IDictionaryStringTo<JQuery>;
     private _ProductvalueToLabelMap: IDictionaryStringTo<JQuery>;
+
+
+    private _AreaselectedValuesWrapper: JQuery;
+    private _AreaselectedValuesContainer: JQuery;
+    private _AreacheckboxValuesContainer: JQuery;
+    private _Areachevron: JQuery;
+    private _AreasuggestedValues: string[];
+    private _AreatoggleThrottleDelegate: Function;
+    private _AreavalueToCheckboxMap: IDictionaryStringTo<JQuery>;
+    private _AreavalueToLabelMap: IDictionaryStringTo<JQuery>;
 
     /**
      * Initialize a new instance of MultiValueControl
@@ -99,6 +110,36 @@ export class MultiValueCombo extends BaseMultiValueControl {
 
         this._Productchevron.click(() => {
             this._ProducttoggleThrottleDelegate.call(this);
+            return false;
+        });
+
+        //#endregion
+        //#region Area
+        this._AreaselectedValuesWrapper = $("<div>").addClass("areaselectedValuesWrapper").appendTo(this.AreacontainerElement);
+        this._AreaselectedValuesContainer = $("<div>").addClass("areaselectedValuesContainer").attr("tabindex", "-1").appendTo(this._AreaselectedValuesWrapper);
+        this._Areachevron = $("<span />").addClass("bowtie-icon " + this._chevronDownClass).appendTo(this._AreaselectedValuesWrapper);
+        this._AreacheckboxValuesContainer = $("<div>").addClass("areacheckboxValuesContainer").appendTo(this.AreacontainerElement);
+        this._AreavalueToCheckboxMap = {};
+        this._AreavalueToLabelMap = {};
+
+        this._AreagetSuggestedValues().then(
+            (values: string[]) => {
+                this._AreasuggestedValues = values;
+                this._AreapopulateCheckBoxes();
+                super.Areainitialize();
+            }
+        );
+        this._AreatoggleThrottleDelegate = VSSUtilsCore.throttledDelegate(this, 100, () => {
+            this._AreatoggleCheckBoxContainer();
+        });
+
+        this._AreaselectedValuesWrapper.click(() => {
+            this._AreatoggleThrottleDelegate.call(this);
+            return false;
+        });
+
+        this._Areachevron.click(() => {
+            this._AreatoggleThrottleDelegate.call(this);
             return false;
         });
 
@@ -245,6 +286,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
             if (action) {
                 action.call(this);
             }
+            $('.pcheckboxContainer').empty();
             this.selectFamily = value;
             var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
             var url: string = inputs["ProductUrl"];
@@ -385,7 +427,7 @@ export class MultiValueCombo extends BaseMultiValueControl {
             this._ProductvalueToLabelMap[value] = label;
             container.append(checkbox);
             container.append(label);
-            this._ProductcheckboxValuesContainer.empty().append(container);
+            this._ProductcheckboxValuesContainer.append(container);
         }
        
         private _createProductCheckBox(value: string, label: JQuery, action?: Function) {
@@ -400,6 +442,20 @@ export class MultiValueCombo extends BaseMultiValueControl {
                 if (action) {
                     action.call(this);
                 }
+                $('.acheckboxContainer').empty();
+                this.selectProduct = value;
+                console.log("Selected product :"+ value);
+                var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
+                var url: string = inputs["AreaUrl"];
+                var property: string = inputs["AreaProperty"];
+                this._getRespectiveValues(url,property,this.selectProduct).then(
+                    (values: string[]) => {
+                        this._AreasuggestedValues = values;
+                        if (this._AreasuggestedValues.length > 0){
+                            this._AreapopulateCheckBoxes();
+                        }
+                    }
+                );
                 this._refreshProductValue($(f.currentTarget).attr("value"));
                 this.Productflush();
             });
@@ -408,6 +464,151 @@ export class MultiValueCombo extends BaseMultiValueControl {
        
     //#endregion
 
+    //#region Area
+
+    public Areaclear(): void {
+        var checkboxes: JQuery = $("input", this._AreacheckboxValuesContainer);
+        var labels: JQuery = $(".checkboxLabel", this._AreacheckboxValuesContainer);
+        checkboxes.prop("checked", false);
+        checkboxes.removeClass("selectedCheckbox");
+        this._AreaselectedValuesContainer.empty();
+    }
+    protected AreagetValue(): string {
+        return this._AreaselectedValuesContainer.text();
+    }
+
+    protected AreasetValue(value: string): void {
+        this.Areaclear();
+        var selectedValues = value ? value.split(";") : [];
+
+        this._AreashowValues(selectedValues);
+        $.each(selectedValues, (i, value) => {
+            if (value) {
+                // mark the checkbox as checked
+                var checkbox = this._AreavalueToCheckboxMap[value];
+                var label = this._AreavalueToLabelMap[value];
+                if (checkbox) {
+                    checkbox.prop("checked", true);
+                    checkbox.addClass("selectedCheckbox");
+                }
+            }
+        });
+    }
+    private _hideAreaCheckBoxContainer() {
+        this._Areachevron.removeClass(this._chevronUpClass).addClass(this._chevronDownClass);
+        this.AreacontainerElement.removeClass("expanded").addClass("collapsed");
+        this._AreacheckboxValuesContainer.hide();
+        this.resize();
+    }
+
+    private _showAreaCheckBoxContainer() {
+        this._Areachevron.removeClass(this._chevronDownClass).addClass(this._chevronUpClass);
+        this.AreacontainerElement.addClass("expanded").removeClass("collapsed");
+        this._AreacheckboxValuesContainer.show();
+        this.resize();
+    }
+
+    private _refreshAreaValue(currentSelectedValue) {
+        this._hideAreaCheckBoxContainer();
+        this._AreaselectedValuesContainer.empty();
+        var val = [currentSelectedValue];
+        this._AreashowValues(val);
+    }
+
+    private _AreacreateSelectedValueControl(value: string): JQuery {
+        var control = $("<div />");
+        if (value) {
+            control.text(value);
+            control.attr("title", value);
+            // control.addClass("selected");
+            this._AreaselectedValuesContainer.empty();
+            this._AreaselectedValuesContainer.append(control);
+        }
+        return control;
+    }
+
+    private _AreashowValues(values: string[]) {
+        if (values.length <= 0) {
+            this._AreaselectedValuesContainer.append("<div class='noAreaSelection'>No selection made</div>");
+        } else {
+            $.each(values, (i, value) => {
+                var control;
+                // only show first N selections and the rest as more.
+                if (i < this._maxSelectedToShow) {
+                    control = this._AreacreateSelectedValueControl(value);
+                } else {
+                    control = this._AreacreateSelectedValueControl(values.length - i + " more");
+                    control.attr("title", values.slice(i).join(";"));
+                    return false;
+                }
+            });
+        }
+        this.resize();
+    }
+
+    private _AreatoggleCheckBoxContainer() {
+        if (this._AreacheckboxValuesContainer.is(":visible")) {
+            this._hideAreaCheckBoxContainer();
+        } else {
+            this._showAreaCheckBoxContainer();
+        }
+    }
+
+    private _AreagetSuggestedValues(): IPromise<string[]> {
+        var defer = Q.defer<any>();
+        var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
+        var url: string = inputs["AreaUrl"];
+        var property: string = inputs["AreaProperty"];
+        callDevApi(url, "GET", undefined, undefined, (data) => {
+            defer.resolve(this._findArr(property,data));
+        }, (error) => {
+            defer.reject(error);
+        });
+        return defer.promise;
+    }
+
+    private _AreapopulateCheckBoxes(): void {
+        if (!this._AreasuggestedValues || this._AreasuggestedValues.length === 0) {
+            this.showAreaError("No values to select.");
+        } else {
+            $.each(this._AreasuggestedValues, (i, value) => {
+                this._createAreaCheckBoxControl(value);
+            });
+        }
+    }
+
+    private _createAreaCheckBoxControl(value: string) {
+        let label = this._createAreaValueLabel(value);
+        let checkbox = this._createAreaCheckBox(value, label);
+        let container = $("<div />").addClass("acheckboxContainer");
+        checkbox.addClass("valueOption");
+        this._AreavalueToCheckboxMap[value] = checkbox;
+        this._AreavalueToLabelMap[value] = label;
+        container.append(checkbox);
+        container.append(label);
+        this._AreacheckboxValuesContainer.append(container);
+    }
+    private _createAreaCheckBox(value: string, label: JQuery, action?: Function) {
+        let checkbox = $("<input  />");
+        checkbox.attr("type", "checkbox");
+        checkbox.attr("name", value);
+        checkbox.attr("value", value);
+        checkbox.attr("tabindex", 3);
+        checkbox.attr("id", "optionArea" + value);
+        checkbox.attr("style", "visibility:hidden");
+        checkbox.change((e) => {
+            if (action) {
+                action.call(this);
+            }
+            this._refreshAreaValue($(e.currentTarget).attr("value"));
+            this.Areaflush();
+        });
+        return checkbox;
+    }
+
+    //#endregion
+
+    //#region General
     // Convert unknown data type to string[]
     private _findArr(property: string, data: object): string[] {
         const inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
@@ -473,4 +674,5 @@ export class MultiValueCombo extends BaseMultiValueControl {
         label.addClass("checkboxLabel");
         return label;
     }
+    //#endregion
 }

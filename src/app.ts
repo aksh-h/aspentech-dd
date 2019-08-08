@@ -15,6 +15,7 @@ $(window).bind("keydown", function (event: JQueryEventObject) {
 
 var control: BaseMultiValueControl;
 var Productcontrol: BaseMultiValueControl;
+var Areacontrol: BaseMultiValueControl;
 var provider = () => {
     var ensureControl = () => {
         if (!control) {
@@ -33,6 +34,14 @@ var provider = () => {
             Productcontrol.Productinitialize();
         }
     }
+    var ensureAreacontrol = () =>{
+        if(!Areacontrol){
+            var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
+            var controlType: string = inputs["InputMode"];
+            Areacontrol = new MultiValueCombo();
+            Areacontrol.Areainitialize();
+        }
+    }
 
     return {
         onLoaded: (args: WitExtensionContracts.IWorkItemLoadedArgs) => {
@@ -46,6 +55,9 @@ var provider = () => {
             if(Productcontrol){
                 Productcontrol.Productclear();
             }
+            if(Areacontrol){
+                Areacontrol.Areaclear();
+            }
         },
         onFieldChanged: (args: WitExtensionContracts.IWorkItemFieldChangedArgs) => {
             if (control && args.changedFields[control.fieldName] !== undefined && args.changedFields[control.fieldName] !== null) {
@@ -53,6 +65,9 @@ var provider = () => {
             }
             else if(Productcontrol && args.changedFields[Productcontrol.ProductfieldName]!==undefined && args.changedFields[Productcontrol.ProductfieldName]!==null){
                 Productcontrol.Productinvalidate();
+            }
+            else if(Areacontrol && args.changedFields[Areacontrol.AreafieldName]!==undefined && args.changedFields[Areacontrol.AreafieldName]!==null){
+                Areacontrol.Areainvalidate();
             }
         }
     };

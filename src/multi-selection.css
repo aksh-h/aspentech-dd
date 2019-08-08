@@ -297,3 +297,154 @@ input[type=checkbox]:checked + label {
 .productcontainer .identity-list-container .identity-container .remove-identity {
     cursor: pointer;
 }
+
+/* Area */
+
+.areacontainer {
+    border: 1px transparent solid;
+    margin-right: 4px;
+}
+
+html:focus, body:focus, div:focus {
+    outline: none;
+}
+
+input, label, .areacontainer {
+    cursor: pointer;
+}
+
+.areacontainer, .areacontainer:active, .areacontainer.expanded, .areacontainer.fieldBorder {
+    border: 1px #e6e6e6 solid;
+}
+
+.areacontainer .selected {
+    margin: 5px 5px 0 0;
+    display: inline-block;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 2px 6px;
+    font-size: 12px;
+    color: #4F4F4F;
+    border: solid 1px #e5e5e5;
+    background-color: #fafafa;
+}
+
+.areacontainer .areaselectedValuesContainer .noAreaSelection {
+    margin: 0px 6px 0px 4px;
+    font-size: 12px;
+    display:inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: grey;
+    height: 16px;
+}
+
+.areacontainer .checkboxLabel {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    width: calc(100% - 20px);
+}
+
+input[type=checkbox]:checked + label {
+    font-weight: normal;
+}
+
+.areacontainer .areaselectedValuesContainer {
+    padding-left:2px;
+    height: 16px;
+}    
+
+.areacontainer .selectAllControlContainer {
+    margin-top: 5px;
+}
+
+.areacontainer .areaselectedValuesWrapper {
+    padding-right: 20px;
+    padding-bottom:3px;
+    padding-top:3px;
+    position: relative;
+}
+
+.areacontainer.expanded .areaselectedValuesWrapper {
+    border-bottom: 1px #e6e6e6 solid;
+}
+
+.areacontainer .areaselectedValuesWrapper .bowtie-icon {
+    margin: -8px 2px 0 2px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 20px;
+    visibility: hidden;
+}
+
+.areacontainer .areaselectedValuesWrapper .bowtie-icon, .areacontainer .areaselectedValuesWrapper:active .bowtie-icon,
+.areacontainer.expanded .areaselectedValuesWrapper .bowtie-icon {
+    visibility: visible;
+}
+
+.areacontainer .areacheckboxValuesContainer {
+   max-height: 200px;
+    overflow-y: auto;
+    display: none;
+}
+
+.areacontainer .errorPane {
+    background-color: red;
+    margin:5px;
+    padding:5px;
+    display:none;
+}
+
+.areacontainer .acheckboxContainer {
+    margin-top:5px;
+    margin-bottom:5px;
+    font-size:12px;
+}
+
+.areacontainer .acheckboxContainer:hover  {
+    background-color: #dce6f4;
+}
+
+.areacontainer.identity-picker-container {
+    border: none;
+    height: 100%;
+}
+
+.areacontainer .search-control-container {
+    border: 1px #e6e6e6 solid;
+}
+
+.areacontainer .identity-list-container {
+    margin-top: 5px;
+    overflow-y: auto;
+    position: absolute;
+    top: 20px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow-x: hidden;
+}
+
+.areacontainer .identity-list-container .identity-container {
+    width: 150px;    
+    display: inline-block;
+    background-color: #d7e6f3;
+    margin: 1px;
+    padding: 1px;
+}
+
+.areacontainer .identity-list-container .identity-container > div {
+    width: 130px;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.areacontainer .identity-list-container .identity-container .remove-identity {
+    cursor: pointer;
+}

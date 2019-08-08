@@ -238,7 +238,6 @@ export class BaseMultiValueControl {
         this._AreaerrorPane.hide();
     }
     protected Areaflush(): void {
-        console.log("AreaFlush");
         this._flushing = true;
         WitService.WorkItemFormService.getService().then(
             (service: WitService.IWorkItemFormService) => {
