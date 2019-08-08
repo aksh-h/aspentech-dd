@@ -448,3 +448,154 @@ input[type=checkbox]:checked + label {
 .areacontainer .identity-list-container .identity-container .remove-identity {
     cursor: pointer;
 }
+
+/* SubArea */
+
+.subareacontainer {
+    border: 1px transparent solid;
+    margin-right: 4px;
+}
+
+html:focus, body:focus, div:focus {
+    outline: none;
+}
+
+input, label, .subareacontainer {
+    cursor: pointer;
+}
+
+.subareacontainer, .subareacontainer:active, .subareacontainer.expanded, .subareacontainer.fieldBorder {
+    border: 1px #e6e6e6 solid;
+}
+
+.subareacontainer .selected {
+    margin: 5px 5px 0 0;
+    display: inline-block;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 2px 6px;
+    font-size: 12px;
+    color: #4F4F4F;
+    border: solid 1px #e5e5e5;
+    background-color: #fafafa;
+}
+
+.subareacontainer .subareaselectedValuesContainer .noSubAreaSelection {
+    margin: 0px 6px 0px 4px;
+    font-size: 12px;
+    display:inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: grey;
+    height: 16px;
+}
+
+.subareacontainer .checkboxLabel {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    width: calc(100% - 20px);
+}
+
+input[type=checkbox]:checked + label {
+    font-weight: normal;
+}
+
+.subareacontainer .subareaselectedValuesContainer {
+    padding-left:2px;
+    height: 16px;
+}    
+
+.subareacontainer .selectAllControlContainer {
+    margin-top: 5px;
+}
+
+.subareacontainer .subareaselectedValuesWrapper {
+    padding-right: 20px;
+    padding-bottom:3px;
+    padding-top:3px;
+    position: relative;
+}
+
+.subareacontainer.expanded .subareaselectedValuesWrapper {
+    border-bottom: 1px #e6e6e6 solid;
+}
+
+.subareacontainer .subareaselectedValuesWrapper .bowtie-icon {
+    margin: -8px 2px 0 2px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 20px;
+    visibility: hidden;
+}
+
+.subareacontainer .subareaselectedValuesWrapper .bowtie-icon, .subareacontainer .subareaselectedValuesWrapper:active .bowtie-icon,
+.subareacontainer.expanded .subareaselectedValuesWrapper .bowtie-icon {
+    visibility: visible;
+}
+
+.subareacontainer .subareacheckboxValuesContainer {
+   max-height: 200px;
+    overflow-y: auto;
+    display: none;
+}
+
+.subareacontainer .errorPane {
+    background-color: red;
+    margin:5px;
+    padding:5px;
+    display:none;
+}
+
+.subareacontainer .sacheckboxContainer {
+    margin-top:5px;
+    margin-bottom:5px;
+    font-size:12px;
+}
+
+.subareacontainer .sacheckboxContainer:hover  {
+    background-color: #dce6f4;
+}
+
+.subareacontainer.identity-picker-container {
+    border: none;
+    height: 100%;
+}
+
+.subareacontainer .search-control-container {
+    border: 1px #e6e6e6 solid;
+}
+
+.subareacontainer .identity-list-container {
+    margin-top: 5px;
+    overflow-y: auto;
+    position: absolute;
+    top: 20px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow-x: hidden;
+}
+
+.subareacontainer .identity-list-container .identity-container {
+    width: 150px;    
+    display: inline-block;
+    background-color: #d7e6f3;
+    margin: 1px;
+    padding: 1px;
+}
+
+.subareacontainer .identity-list-container .identity-container > div {
+    width: 130px;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.subareacontainer .identity-list-container .identity-container .remove-identity {
+    cursor: pointer;
+}

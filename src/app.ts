@@ -16,6 +16,7 @@ $(window).bind("keydown", function (event: JQueryEventObject) {
 var control: BaseMultiValueControl;
 var Productcontrol: BaseMultiValueControl;
 var Areacontrol: BaseMultiValueControl;
+var SubAreacontrol: BaseMultiValueControl;
 var provider = () => {
     var ensureControl = () => {
         if (!control) {
@@ -42,11 +43,21 @@ var provider = () => {
             Areacontrol.Areainitialize();
         }
     }
+    var ensureSubAreacontrol = () =>{
+        if(!SubAreacontrol){
+            var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
+            var controlType: string = inputs["InputMode"];
+            SubAreacontrol = new MultiValueCombo();
+            SubAreacontrol.SubAreainitialize();
+        }
+    }
 
     return {
         onLoaded: (args: WitExtensionContracts.IWorkItemLoadedArgs) => {
             ensureControl();
             ensureProductcontrol();
+            ensureAreacontrol();
+            ensureSubAreacontrol();
         },
         onUnloaded: (args: WitExtensionContracts.IWorkItemChangedArgs) => {
             if (control) {
@@ -58,6 +69,9 @@ var provider = () => {
             if(Areacontrol){
                 Areacontrol.Areaclear();
             }
+            if(SubAreacontrol){
+                SubAreacontrol.SubAreaclear();
+            }
         },
         onFieldChanged: (args: WitExtensionContracts.IWorkItemFieldChangedArgs) => {
             if (control && args.changedFields[control.fieldName] !== undefined && args.changedFields[control.fieldName] !== null) {
@@ -68,6 +82,9 @@ var provider = () => {
             }
             else if(Areacontrol && args.changedFields[Areacontrol.AreafieldName]!==undefined && args.changedFields[Areacontrol.AreafieldName]!==null){
                 Areacontrol.Areainvalidate();
+            }
+            else if(SubAreacontrol && args.changedFields[SubAreacontrol.SubAreafieldName]!==undefined && args.changedFields[SubAreacontrol.SubAreafieldName]!==null){
+                SubAreacontrol.SubAreainvalidate();
             }
         }
     };

@@ -9,18 +9,21 @@ export class BaseMultiValueControl {
     public fieldName: string;
     public ProductfieldName: string;
     public AreafieldName: string;
+    public SubAreafieldName: string;
     /**
      * The container to hold the control
      */
     protected containerElement: JQuery;
     protected ProductcontainerElement: JQuery;
     protected AreacontainerElement: JQuery;
+    protected SubAreacontainerElement: JQuery;
     /**
      * The container for error message display
      */
     private _errorPane: JQuery;
     private _ProducterrorPane: JQuery;
     private _AreaerrorPane: JQuery;
+    private _SubAreaerrorPane: JQuery;
 
     private _flushing: boolean;
     private _bodyElement: HTMLBodyElement;
@@ -94,6 +97,21 @@ export class BaseMultiValueControl {
         this.AreafieldName = inputs["AreaName"];
         if (!this.AreafieldName) {
             this.showAreaError("Area input has not been specified");
+        }
+        //#endregion
+
+        //#region SubArea
+        this.SubAreacontainerElement = $(".subareacontainer");
+        if (this._showFieldBorder) {
+            this.SubAreacontainerElement.addClass("fieldBorder");
+        }
+        
+        this._SubAreaerrorPane = $("<div>").addClass("errorPane").appendTo(this.SubAreacontainerElement);
+        var inputs: IDictionaryStringTo<string> = initialConfig.witInputs;
+
+        this.SubAreafieldName = inputs["SubAreaName"];
+        if (!this.SubAreafieldName) {
+            this.showSubAreaError("SubArea input has not been specified");
         }
         //#endregion
     }
@@ -248,6 +266,55 @@ export class BaseMultiValueControl {
                     () => {
                         this._flushing = false;
                         this.showAreaError("Error storing the field value");
+                    }
+                )
+            }
+        );
+    }
+    //#endregion
+
+     //#region SubArea
+
+     protected SubAreagetValue(): string {
+        return "";
+    }
+    protected SubAreasetValue(value: string): void {
+    }
+    public SubAreaclear(): void {
+    }
+
+    public SubAreainitialize(): void {
+        this.SubAreainvalidate();
+    }
+    public SubAreainvalidate(): void {
+        if (!this._flushing) {
+            this._getCurrentFieldValue(this.SubAreafieldName).then(
+                (value: string) => {
+                    this.SubAreasetValue(value);
+                }
+            );
+        }
+        this.resize();
+    }
+    protected showSubAreaError(error: string): void {
+        this._SubAreaerrorPane.text(error);
+        this._SubAreaerrorPane.show();
+    }
+    public clearSubAreaError() {
+        this._SubAreaerrorPane.text("");
+        this._SubAreaerrorPane.hide();
+    }
+    protected SubAreaflush(): void {
+        this._flushing = true;
+        WitService.WorkItemFormService.getService().then(
+            (service: WitService.IWorkItemFormService) => {
+                service.setFieldValue(this.SubAreafieldName, this.SubAreagetValue()).then(
+                    (values) => {
+                        this._flushing = false;
+                    },
+                    () => {
+                        this._flushing = false;
+                        this.showSubAreaError("Error storing the field value");
                     }
                 )
             }
