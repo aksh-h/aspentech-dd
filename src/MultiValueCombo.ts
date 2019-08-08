@@ -105,7 +105,6 @@ export class MultiValueCombo extends BaseMultiValueControl {
         this._ProductgetSuggestedValues().then(
             (values: string[]) => {
                 this._ProductsuggestedValues = values;
-                this._ProductpopulateCheckBoxes();
                 super.Productinitialize();
             }
         );
@@ -136,7 +135,6 @@ export class MultiValueCombo extends BaseMultiValueControl {
         this._AreagetSuggestedValues().then(
             (values: string[]) => {
                 this._AreasuggestedValues = values;
-                this._AreapopulateCheckBoxes();
                 super.Areainitialize();
             }
         );
@@ -167,7 +165,6 @@ export class MultiValueCombo extends BaseMultiValueControl {
         this._SubAreagetSuggestedValues().then(
             (values: string[]) => {
                 this._SubAreasuggestedValues = values;
-                this._SubAreapopulateCheckBoxes();
                 super.SubAreainitialize();
             }
         );

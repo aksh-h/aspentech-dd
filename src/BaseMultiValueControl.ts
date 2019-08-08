@@ -116,6 +116,7 @@ export class BaseMultiValueControl {
         //#endregion
     }
 
+    //#region  Family
     /**
      * Initialize a new instance of Control
      */
@@ -173,6 +174,7 @@ export class BaseMultiValueControl {
         this._errorPane.text("");
         this._errorPane.hide();
     }
+    //#endregion
    
     //#region Product
 
