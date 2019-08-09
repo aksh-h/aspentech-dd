@@ -325,6 +325,14 @@ export class MultiValueCombo extends BaseMultiValueControl {
             if (action) {
                 action.call(this);
             }
+            this.ClearProduct();
+            this.Productclear();
+
+            this.Areaclear();
+            this.ClearArea();
+
+            this.SubAreaclear();
+            this.ClearSubarea();
             $('.pcheckboxContainer').empty();
             this.selectFamily = value;
             var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
@@ -364,7 +372,6 @@ export class MultiValueCombo extends BaseMultiValueControl {
         }
 
         protected ProductsetValue(value: string): void {
-            this.Productclear();
             var selectedValues = value ? value.split(";") : [];
 
             this._ProductshowValues(selectedValues);
@@ -526,7 +533,6 @@ export class MultiValueCombo extends BaseMultiValueControl {
     }
 
     protected AreasetValue(value: string): void {
-        this.Areaclear();
         var selectedValues = value ? value.split(";") : [];
 
         this._AreashowValues(selectedValues);
@@ -690,7 +696,6 @@ export class MultiValueCombo extends BaseMultiValueControl {
     }
 
     protected SubAreasetValue(value: string): void {
-        this.SubAreaclear();
         var selectedValues = value ? value.split(";") : [];
 
         this._SubAreashowValues(selectedValues);

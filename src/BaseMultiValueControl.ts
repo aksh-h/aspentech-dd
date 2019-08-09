@@ -347,4 +347,43 @@ export class BaseMultiValueControl {
         // Cast as any until declarations are updated
         VSS.resize(null, this._bodyElement.offsetHeight);
     }
+    protected ClearProduct(): void {
+        WitService.WorkItemFormService.getService().then(
+            (service: WitService.IWorkItemFormService) => {
+                service.setFieldValue(this.ProductfieldName, "").then(
+                    (values) => {
+                    },
+                    () => {
+                        this.showAreaError("Error clearing the field value");
+                    }
+                )
+            }
+        );
+    }
+    protected ClearArea(): void {
+        WitService.WorkItemFormService.getService().then(
+            (service: WitService.IWorkItemFormService) => {
+                service.setFieldValue(this.AreafieldName, "").then(
+                    (values) => {
+                    },
+                    () => {
+                        this.showAreaError("Error clearing the field value");
+                    }
+                )
+            }
+        );
+    }
+    protected ClearSubarea(): void {
+        WitService.WorkItemFormService.getService().then(
+            (service: WitService.IWorkItemFormService) => {
+                service.setFieldValue(this.SubAreafieldName, "").then(
+                    (values) => {
+                    },
+                    () => {
+                        this.showAreaError("Error clearing the field value");
+                    }
+                )
+            }
+        );
+    }
 }
