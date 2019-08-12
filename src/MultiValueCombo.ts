@@ -492,6 +492,11 @@ export class MultiValueCombo extends BaseMultiValueControl {
                 if (action) {
                     action.call(this);
                 }
+                this.Areaclear();
+                this.ClearArea();
+
+                this.SubAreaclear();
+                this.ClearSubarea();
                 $('.acheckboxContainer').empty();
                 this.selectProduct = value;
                 var inputs: IDictionaryStringTo<string> = VSS.getConfiguration().witInputs;
@@ -654,6 +659,8 @@ export class MultiValueCombo extends BaseMultiValueControl {
             if (action) {
                 action.call(this);
             }
+            this.ClearSubarea();
+            this.SubAreaclear();
             $('.sacheckboxContainer').empty();
             this.selectArea = value;
             console.log("Selected area :"+ value);
