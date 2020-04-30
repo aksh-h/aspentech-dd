@@ -36,6 +36,6 @@
   "description": "VSTS Work Item Form single value Control Extension",
   "private": false,
   "dependencies": {
-    "jquery": "^3.4.1"
+    "jquery": "^3.5.0"
   }
 }
